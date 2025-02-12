@@ -3,7 +3,9 @@
 #include "Arp/System/Commons/Logging.h"
 #include "Arp/System/Core/Arp.h"
 #include "StarterKitComponent.hpp"
+#include "Utils/error.hpp"
 #include "Utils/util.hpp"
+
 
 namespace StarterKit
 {
