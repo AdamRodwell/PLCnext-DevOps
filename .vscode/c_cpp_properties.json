@@ -6,7 +6,7 @@
                 "${workspaceFolder}/**",
                 "/usr/include/**",
                 "/opt/axcf2152-linux_sdk_2024/sysroots/cortexa9t2hf-neon-pxc-linux-gnueabi/usr/include/**",
-                "${workspaceFolder}/src/projects/StarterKit/**"
+                "${workspaceFolder}/src/projects/**"
             ],
             "defines": [
                 "__ARM_PCS_VFP"

@@ -1,59 +1,59 @@
-name: Static Code Analysis and Build For StarterKit Project
+# name: Static Code Analysis and Build For StarterKit Project
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     branches:
+#       - main
 
-jobs:
-  lint:
-    runs-on: ubuntu-latest
+# jobs:
+#   lint:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Authenticate Docker with GitHub Container Registry
-        run: docker login --username cyberflaneurx --password ${{ secrets.GH_PAT }} ghcr.io
+#       - name: Authenticate Docker with GitHub Container Registry
+#         run: docker login --username cyberflaneurx --password ${{ secrets.GH_PAT }} ghcr.io
 
-      - name: Pull Docker image
-        run: docker pull ghcr.io/cyberflaneurx/plc-next-ghcr:latest
+#       - name: Pull Docker image
+#         run: docker pull ghcr.io/cyberflaneurx/plc-next-ghcr:latest
 
-      - name: Start Docker Container
-        run: |
-          docker run -d --name plcnext_container -v $(pwd):/code -w /code ghcr.io/cyberflaneurx/plc-next-ghcr:latest sleep infinity
+#       - name: Start Docker Container
+#         run: |
+#           docker run -d --name plcnext_container -v $(pwd):/code -w /code ghcr.io/cyberflaneurx/plc-next-ghcr:latest sleep infinity
 
-      - name: Ensure Permissions Inside Container
-        run: |
-          docker exec -i --user root plcnext_container chown -R plc:plc /code/src/projects/StarterKit
-          docker exec -i --user root plcnext_container chmod -R 775 /code/src/projects/StarterKit
-          docker exec -i --user plc plcnext_container ls -alh /code/src/projects/StarterKit
+#       - name: Ensure Permissions Inside Container
+#         run: |
+#           docker exec -i --user root plcnext_container chown -R plc:plc /code/src/projects/StarterKit
+#           docker exec -i --user root plcnext_container chmod -R 775 /code/src/projects/StarterKit
+#           docker exec -i --user plc plcnext_container ls -alh /code/src/projects/StarterKit
 
-      - name: Run Cppcheck inside Container
-        run: |
-          docker exec -i -w /code --user plc plcnext_container cppcheck --quiet --enable=warning --force --error-exitcode=2 --suppress=unusedFunction src/projects/StarterKit
+#       - name: Run Cppcheck inside Container
+#         run: |
+#           docker exec -i -w /code --user plc plcnext_container cppcheck --quiet --enable=warning --force --error-exitcode=2 --suppress=unusedFunction src/projects/StarterKit
 
-      - name: Generate PLCNext Code inside Container
-        run: |
-          docker exec -i -w /code/src/projects/StarterKit --env BUILD_TYPE=Release --user plc plcnext_container plcncli generate code --verbose
+#       - name: Generate PLCNext Code inside Container
+#         run: |
+#           docker exec -i -w /code/src/projects/StarterKit --env BUILD_TYPE=Release --user plc plcnext_container plcncli generate code --verbose
 
-      - name: Generate PLCNext Config inside Container
-        run: |
-          docker exec -i -w /code/src/projects/StarterKit --env BUILD_TYPE=Release --user plc plcnext_container plcncli generate config --verbose
+#       - name: Generate PLCNext Config inside Container
+#         run: |
+#           docker exec -i -w /code/src/projects/StarterKit --env BUILD_TYPE=Release --user plc plcnext_container plcncli generate config --verbose
 
-      - name: Build PLCNext Project inside Container
-        run: |
-          docker exec -i -w /code/src/projects/StarterKit --env BUILD_TYPE=Release --user plc plcnext_container plcncli build --verbose
+#       - name: Build PLCNext Project inside Container
+#         run: |
+#           docker exec -i -w /code/src/projects/StarterKit --env BUILD_TYPE=Release --user plc plcnext_container plcncli build --verbose
 
-      - name: Deploy PLCNext Project inside Container
-        run: |
-          docker exec -i -w /code/src/projects/StarterKit --env BUILD_TYPE=Release --user plc plcnext_container plcncli deploy
+#       - name: Deploy PLCNext Project inside Container
+#         run: |
+#           docker exec -i -w /code/src/projects/StarterKit --env BUILD_TYPE=Release --user plc plcnext_container plcncli deploy
 
-      - name: Stop Docker Container
-        run: docker stop plcnext_container
+#       - name: Stop Docker Container
+#         run: docker stop plcnext_container
 
-      - name: Remove Docker Container
-        run: docker rm plcnext_container
+#       - name: Remove Docker Container
+#         run: docker rm plcnext_container
