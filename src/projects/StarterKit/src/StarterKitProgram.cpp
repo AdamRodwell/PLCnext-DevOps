@@ -4,47 +4,49 @@
 
 namespace StarterKit
 {
+
 uint32
 StarterKitProgram::convertMillivoltsToRange(uint32 millivolts, uint32 minRange, uint32 maxRange)
 {
-    // Convert millivolts to volts as a floating-point number
     double voltage = static_cast<double>(millivolts) / 1000.0;
-
-    // Assuming voltage is now in the range 0-10V
-    // Scale the voltage to the new range
     double scaled = ((voltage / 10.0) * (maxRange - minRange)) + minRange;
-
-    // Cast the result to uint32 for return
-    return scaled;
+    return static_cast<uint32>(scaled);
 }
 
 void
 StarterKitProgram::Execute()
 {
-    // implement program
-
-    if (config_.allowOutputs && command_.setOutput)
+    try
     {
-        // control two fans for cooling
-        dOUT01_ = true;
-        dOUT02_ = true;
+        if (config_.allowOutputs && command_.setOutput)
+        {
+            dOUT01_ = true;
+            dOUT02_ = true;
+        }
+        else
+        {
+            dOUT01_ = false;
+            dOUT02_ = false;
+        }
+
+        if (command_.readAnalog1)
+        {
+            uint32 analogReading = aiN1_;
+            log.Info("Analog one reading: {0}", analogReading);
+
+            const double scaledReading = convertMillivoltsToRange(
+                analogReading, config_.analogInOne.minRange, config_.analogInOne.maxRange);
+
+            log.Info("Scaled analog reading {0}", scaledReading);
+        }
     }
-    else
+    catch (const std::exception& e)
     {
-        dOUT01_ = false;
-        dOUT02_ = false;
+        log.Error("Exception caught in Execute(): {0}", e.what());
     }
-
-    if (command_.readAnalog1)
+    catch (...)
     {
-        uint32 analogReading = aiN1_;
-
-        log.Info("Analog one reading: {0}", analogReading);
-
-        const double scaledReading = convertMillivoltsToRange(
-            analogReading, config_.analogInOne.minRange, config_.analogInOne.maxRange);
-
-        log.Info("Scaled analog reading {0}", scaledReading);
+        log.Error("Unknown exception caught in Execute()");
     }
 }
 
