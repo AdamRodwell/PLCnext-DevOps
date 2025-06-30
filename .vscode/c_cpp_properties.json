@@ -5,14 +5,16 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "/usr/include/**",
-                "/opt/plcnext_axcf2152_sdk_2023/sysroots/cortexa9t2hf-neon-pxc-linux-gnueabi/usr/include/**",
+                "/opt/axcf2152-linux_sdk_2024/sysroots/cortexa9t2hf-neon-pxc-linux-gnueabi/usr/include/**",
                 "${workspaceFolder}/src/projects/StarterKit/**"
             ],
-            "defines": [],
-            "compilerPath": "/opt/plcnext_axcf2152_sdk_2023/sysroots/x86_64-pokysdk-linux/usr/bin/arm-pxc-linux-gnueabi/arm-pxc-linux-gnueabi-g++",
+            "defines": [
+                "__ARM_PCS_VFP"
+            ],
+            "compilerPath": "/opt/axcf2152-linux_sdk_2024/sysroots/x86_64-pokysdk-linux/usr/bin/arm-pxc-linux-gnueabi/arm-pxc-linux-gnueabi-g++",
             "cStandard": "c99",
             "cppStandard": "c++14",
-            "intelliSenseMode": "gcc-arm",
+            "intelliSenseMode": "linux-gcc-arm",
             "configurationProvider": "ms-vscode.cpptools"
         }
     ],
