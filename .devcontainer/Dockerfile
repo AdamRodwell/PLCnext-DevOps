@@ -1,1 +1,1 @@
-FROM ghcr.io/cyberflaneurx/plc-next-ghcr:latest
+FROM ghcr.io/adamrodwell/plc-next-ghcr:2024
